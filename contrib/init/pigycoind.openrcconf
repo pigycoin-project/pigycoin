@@ -1,0 +1,33 @@
+# /etc/conf.d/pigycoind: config file for /etc/init.d/pigycoind
+
+# Config file location
+#PIGYCOIND_CONFIGFILE="/etc/pigycoin/pigycoin.conf"
+
+# What directory to write pidfile to?  (created and owned by $PIGYCOIND_USER)
+#PIGYCOIND_PIDDIR="/var/run/pigycoind"
+
+# What filename to give the pidfile
+#PIGYCOIND_PIDFILE="${PIGYCOIND_PIDDIR}/pigycoind.pid"
+
+# Where to write pigycoind data (be mindful that the blockchain is large)
+#PIGYCOIND_DATADIR="/var/lib/pigycoind"
+
+# User and group to own pigycoind process
+#PIGYCOIND_USER="pigycoin"
+#PIGYCOIND_GROUP="pigycoin"
+
+# Path to pigycoind executable
+#PIGYCOIND_BIN="/usr/bin/pigycoind"
+
+# Nice value to run pigycoind under
+#PIGYCOIND_NICE=0
+
+# Additional options (avoid -conf and -datadir, use flags above)
+#PIGYCOIND_OPTS=""
+
+# The timeout in seconds OpenRC will wait for pigycoind to terminate
+# after a SIGTERM has been raised.
+# Note that this will be mapped as argument to start-stop-daemon's
+# '--retry' option, which means you can specify a retry schedule
+# here. For more information see man 8 start-stop-daemon.
+PIGYCOIND_SIGTERM_TIMEOUT=60

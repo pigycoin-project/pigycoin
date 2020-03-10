@@ -1,0 +1,92 @@
+#!/sbin/openrc-run
+
+# backward compatibility for existing gentoo layout 
+#
+if [ -d "/var/lib/pigycoin/.pigycoin" ]; then
+	PIGYCOIND_DEFAULT_DATADIR="/var/lib/pigycoin/.pigycoin"
+else
+	PIGYCOIND_DEFAULT_DATADIR="/var/lib/pigycoind"
+fi
+
+PIGYCOIND_CONFIGFILE=${PIGYCOIND_CONFIGFILE:-/etc/pigycoin/pigycoin.conf}
+PIGYCOIND_PIDDIR=${PIGYCOIND_PIDDIR:-/var/run/pigycoind}
+PIGYCOIND_PIDFILE=${PIGYCOIND_PIDFILE:-${PIGYCOIND_PIDDIR}/pigycoind.pid}
+PIGYCOIND_DATADIR=${PIGYCOIND_DATADIR:-${PIGYCOIND_DEFAULT_DATADIR}}
+PIGYCOIND_USER=${PIGYCOIND_USER:-${PIGYCOIN_USER:-pigycoin}}
+PIGYCOIND_GROUP=${PIGYCOIND_GROUP:-pigycoin}
+PIGYCOIND_BIN=${PIGYCOIND_BIN:-/usr/bin/pigycoind}
+PIGYCOIND_NICE=${PIGYCOIND_NICE:-${NICELEVEL:-0}}
+PIGYCOIND_OPTS="${PIGYCOIND_OPTS:-${PIGYCOIN_OPTS}}"
+
+name="Pigycoin Core Daemon"
+description="Pigycoin cryptocurrency P2P network daemon"
+
+command="/usr/bin/pigycoind"
+command_args="-pid=\"${PIGYCOIND_PIDFILE}\" \
+		-conf=\"${PIGYCOIND_CONFIGFILE}\" \
+		-datadir=\"${PIGYCOIND_DATADIR}\" \
+		-daemon \
+		${PIGYCOIND_OPTS}"
+
+required_files="${PIGYCOIND_CONFIGFILE}"
+start_stop_daemon_args="-u ${PIGYCOIND_USER} \
+			-N ${PIGYCOIND_NICE} -w 2000"
+pidfile="${PIGYCOIND_PIDFILE}"
+
+# The retry schedule to use when stopping the daemon. Could be either
+# a timeout in seconds or multiple signal/timeout pairs (like
+# "SIGKILL/180 SIGTERM/300")
+retry="${PIGYCOIND_SIGTERM_TIMEOUT}"
+
+depend() {
+	need localmount net
+}
+
+# verify
+# 1) that the datadir exists and is writable (or create it)
+# 2) that a directory for the pid exists and is writable
+# 3) ownership and permissions on the config file
+start_pre() {
+	checkpath \
+	-d \
+	--mode 0750 \
+	--owner "${PIGYCOIND_USER}:${PIGYCOIND_GROUP}" \
+	"${PIGYCOIND_DATADIR}"
+
+	checkpath \
+	-d \
+	--mode 0755 \
+	--owner "${PIGYCOIND_USER}:${PIGYCOIND_GROUP}" \
+	"${PIGYCOIND_PIDDIR}"
+
+	checkpath -f \
+	-o ${PIGYCOIND_USER}:${PIGYCOIND_GROUP} \
+	-m 0660 \
+	${PIGYCOIND_CONFIGFILE}
+
+	checkconfig || return 1
+}
+
+checkconfig()
+{
+	if ! grep -qs '^rpcpassword=' "${PIGYCOIND_CONFIGFILE}" ; then
+		eerror ""
+		eerror "ERROR: You must set a secure rpcpassword to run pigycoind."
+		eerror "The setting must appear in ${PIGYCOIND_CONFIGFILE}"
+		eerror ""
+		eerror "This password is security critical to securing wallets "
+		eerror "and must not be the same as the rpcuser setting."
+		eerror "You can generate a suitable random password using the following "
+		eerror "command from the shell:"
+		eerror ""
+		eerror "bash -c 'tr -dc a-zA-Z0-9 < /dev/urandom | head -c32 && echo'"
+		eerror ""
+		eerror "It is recommended that you also set alertnotify so you are "
+		eerror "notified of problems:"
+		eerror ""
+		eerror "ie: alertnotify=echo %%s | mail -s \"Pigycoin Alert\"" \
+			"admin@foo.com"
+		eerror ""
+		return 1
+	fi
+}
