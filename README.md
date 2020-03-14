@@ -3,7 +3,7 @@ Pigycoin Core integration/staging tree
 
 [![Build Status](https://travis-ci.org/litecoin-project/litecoin.svg?branch=0.18)](https://travis-ci.org/pigycoin-project/pigycoin)
 
-https://pigycoin.org
+https://pigycoin.org ( On Progress )
 
 What is Pigycoin?
 ----------------
