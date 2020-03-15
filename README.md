@@ -1,3 +1,4 @@
+![](images/pigycoin.png)
 Pigycoin Core integration/staging tree
 =====================================
 
