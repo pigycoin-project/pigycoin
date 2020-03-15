@@ -103,7 +103,7 @@ public:
 
 
         // The best chain should have at least this much work.
-        consensus.nMinimumChainWork = uint256S("0x0000000000000000000000000000000000000000000000000000b0718787f01e");
+        consensus.nMinimumChainWork = uint256S("0x0000000000000000000000000000000000000000000000000002e12d771c55e5");
 
         // By default assume that the signatures in ancestors of this block are valid.
         consensus.defaultAssumeValid = uint256S("0xa601455787cb65ffc325dda4751a99cf01d1567799ec4b04f45bb05f9ef0cbde"); //1503191
@@ -132,6 +132,7 @@ public:
         // release ASAP to avoid it where possible.
         vSeeds.emplace_back("69.85.84.175:7222");
         vSeeds.emplace_back("207.148.21.70:7222");
+        vSeeds.emplace_back("69.85.85.17:7222");
 
         base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,55);
         base58Prefixes[SCRIPT_ADDRESS] = std::vector<unsigned char>(1,5);
@@ -151,14 +152,15 @@ public:
         checkpointData = {
             {
                 {  0, uint256S("0x8e7dee84e9dd06b5ac118f98ed6eb1ebb1c581d97248925f3f01910732976be8")},
+                {  25145, uint256S("0xf743f6dccb9eafe5498c63ec00faba573cc0aa7fd15e79059b4085bb042d3983")},
             }
         };
 
         chainTxData = ChainTxData{
             // Data from rpc: getchaintxstats 4096 a601455787cb65ffc325dda4751a99cf01d1567799ec4b04f45bb05f9ef0cbde
-            /* nTime    */ 1583168405,
-            /* nTxCount */ 0,
-            /* dTxRate  */ 0.334
+            /* nTime    */ 1584285782,
+            /* nTxCount */ 25512,
+            /* dTxRate  */ 0.432
         };
 
         /* disable fallback fee on mainnet */
