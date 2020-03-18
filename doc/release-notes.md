@@ -1,6 +1,6 @@
-Pigycoin Core version 0.17.1.1 is now available from:
+Pigycoin Core version 0.17.1.2 is now available from:
 
-  <https://pigycoincore.org/bin/pigycoin-core-0.17.1.1/>
+  <https://pigycoincore.org/bin/pigycoin-core-0.17.1.2/>
 
 This is a new major version release, including new features, various bugfixes
 and performance improvements, as well as updated translations.
